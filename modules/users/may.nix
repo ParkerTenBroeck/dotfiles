@@ -12,18 +12,5 @@
       username = "may";
       homeDirectory = "/home/may";
     };
-
-    home.packages = with pkgs; [
-      firefox
-      chromium
-      vlc
-      spotify
-      vscode
-      jetbrains.idea
-      obs-studio
-      gh
-      jetbrains.rust-rover
-      wayvnc
-    ];
   };
 }

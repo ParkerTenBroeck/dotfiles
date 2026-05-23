@@ -3,21 +3,21 @@
 {
   imports = [
     ./common.nix
-    ./modules/networking.nix
-    ./modules/bluetooth.nix
-    ./modules/amd.nix
-    ./modules/games/steam.nix
-    ./modules/games/minecraft.nix
-    ./modules/fonts.nix
-    ./modules/packages.nix
-    ./modules/wireguard-server.nix
-    ./modules/hyprland
-    ./modules/tex.nix
+    ../modules/networking.nix
+    ../modules/bluetooth.nix
+    ../modules/amd.nix
+    ../modules/games/steam.nix
+    ../modules/games/minecraft.nix
+    ../modules/fonts.nix
+    ../modules/packages.nix
+    ../modules/wireguard-server.nix
+    ../modules/hyprland
+    ../modules/tex.nix
   ];
 
   nixpkgs.config.allowUnfree = true;
 
-  networking.hostName = "nixos-desktop";
+  networking.hostName = "desktop";
   networking.firewall.allowedTCPPorts = [ 51820 25565 42069 8000 8080 ];
 
   home-manager.users.may.wayland.windowManager.hyprland.settings = {
