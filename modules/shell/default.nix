@@ -1,11 +1,11 @@
 { pkgs, ... }:
 
 {
-  programs.nix-ld.enable = true;
+  # programs.nix-ld.enable = true;
   programs.zsh.enable = true;
   users.defaultUserShell = pkgs.zsh;
 
-  environment.variables.NIX_BUILD_SHELL = "${pkgs.zsh}/bin/zsh";
+  environment.variables.NIX_BUILD_SHELL = "${pkgs.bash}/bin/bash";
 
   home-manager.users.may = { pkgs, ... }: {
     home.file.".p10k.zsh".source = ./.p10k.zsh;
