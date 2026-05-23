@@ -10,6 +10,8 @@
   home-manager.users.may = { pkgs, ... }: {
     home.file.".p10k.zsh".source = ./.p10k.zsh;
 
+    home.packages = with pkgs; [ hstr ];
+
     programs.zsh = {
       enable = true;
 
@@ -41,8 +43,6 @@
       shellAliases = {
         ll = "ls -lah";
         update = "sudo nixos-rebuild switch";
-        callgrind = "valgrind --tool=callgrind";
-        massif = "valgrind --tool=massif";
       };
 
       enableCompletion = true;
