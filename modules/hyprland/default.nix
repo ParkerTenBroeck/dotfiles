@@ -10,6 +10,7 @@ in {
     ./nwg-panel-conf.nix
     # assume any desktop env will have audio
     ../audio.nix
+    ../gui.nix
   ];
 
   
@@ -80,12 +81,6 @@ in {
     };
 
     home.packages = with pkgs; [
-      firefox  # browser
-      nautilus # gui file manager
-      alacritty # terminal
-      imv # image viewer
-      file-roller # archive manager
-
       # notifications
       libnotify
       dunst

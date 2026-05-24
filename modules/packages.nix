@@ -7,7 +7,6 @@
       openjdk21
       vlc
       spotify
-      vscode
       jetbrains.idea
       obs-studio
       discord
