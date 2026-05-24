@@ -20,7 +20,7 @@
 
   networking.hostName = "laptop";
 
-  services.logind.settings.Login.HandlePowerKey = "suspend";
+  services.logind.settings.Login.HandlePowerKey = "hibernate";
 
   # stupid ISO keyboards
   console.useXkbConfig = true;
