@@ -17,11 +17,11 @@
         };
         
         credential."https://github.com" = {
-          helper = "!/etc/profiles/per-user/may/bin/gh auth git-credential";
+          helper = "!${pkgs.gh}/bin/gh auth git-credential";
         };
 
         credential."https://gist.github.com" = {
-          helper = "!/etc/profiles/per-user/may/bin/gh auth git-credential";
+          helper = "!${pkgs.gh}/bin/gh auth git-credential";
         };
 
         filter.lfs = {
