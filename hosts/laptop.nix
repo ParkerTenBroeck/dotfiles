@@ -16,6 +16,8 @@
 
   nixpkgs.config.allowUnfree = true;
 
+  services.perf_mode.enable = true;
+
   networking.hostName = "laptop";
 
   services.logind.settings.Login.HandlePowerKey = "suspend";
