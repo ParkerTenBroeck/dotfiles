@@ -12,5 +12,7 @@
     screen
     ranger # file manager
     ripgrep
+    cloc
+    gdu
   ];
 }
