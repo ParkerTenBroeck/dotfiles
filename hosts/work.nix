@@ -31,18 +31,12 @@ let
     ];
   };
 
-  hyprRun = pkgs.writeShellScript "hypr-run-nvidia" ''
+  hyprRun = pkgs.writeShellScript "hypr-run-igpu" ''
     export XDG_CURRENT_DESKTOP=Hyprland
     export XDG_SESSION_DESKTOP=Hyprland
-    export __GLX_VENDOR_LIBRARY_NAME=nvidia
-    export GBM_BACKEND=nvidia
+    export WLR_DRM_DEVICES=/dev/dri/by-path/pci-0000:00:02.0-card
     export _JAVA_AWT_WM_NONREPARENTING=1
     export XCURSOR_SIZE=24
-    export WLR_DRM_DEVICES=$HOME/.config/hypr/card
-
-    export __NV_PRIME_RENDER_OFFLOAD=1
-    export __NV_PRIME_RENDER_OFFLOAD_PROVIDER=NVIDIA-G0
-    export __VK_LAYER_NV_optimus=NVIDIA_only
 
     exec ${pkgs.hyprland}/bin/Hyprland
   '';
@@ -52,7 +46,6 @@ in {
     /home/may/Documents/GitHub/mywt/nixos-wt-httpd.nix
     ../modules/networking.nix
     ../modules/bluetooth.nix
-    ../modules/nvidia.nix
     ../modules/fonts.nix
     ../modules/packages.nix
     ../modules/tex.nix
@@ -66,6 +59,21 @@ in {
   networking.firewall.allowedTCPPorts = [ 5900 8026 25565 42069 8000 8080 ];
 
   programs.nix-ld.enable = true;
+
+  hardware.graphics = {
+    enable = true;
+    enable32Bit = true;
+  };
+
+  hardware.nvidiaOptimus.disable = true;
+
+  services.xserver.videoDrivers = [ "modesetting" ];
+
+  environment.sessionVariables = {
+    WLR_DRM_DEVICES = "/dev/dri/by-path/pci-0000:00:02.0-card";
+    _JAVA_AWT_WM_NONREPARENTING = "1";
+    XCURSOR_SIZE = "24";
+  };
 
   services.wtLocal = {
     enable = true;
@@ -127,24 +135,6 @@ in {
     wayvnc
     wlr-randr
   ]);
-
-  environment.sessionVariables = {
-    __GLX_VENDOR_LIBRARY_NAME = "nvidia";
-    GBM_BACKEND = "nvidia";
-    _JAVA_AWT_WM_NONREPARENTING = "1";
-    XCURSOR_SIZE = "24";
-
-    __NV_PRIME_RENDER_OFFLOAD = "1";
-    __NV_PRIME_RENDER_OFFLOAD_PROVIDER = "NVIDIA-G0";
-    __VK_LAYER_NV_optimus = "NVIDIA_only";
-  };
-
-  hardware.nvidia.prime = {
-    sync.enable = true;
-    intelBusId = "PCI:0:2:0";
-    nvidiaBusId = "PCI:0:0:0";
-  };
-
 
   services.greetd = lib.mkIf (config.services.greetd.enable && config.programs.hyprland.enable) {
     settings = {
