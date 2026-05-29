@@ -74,6 +74,35 @@ in {
     group = "users";
   };
 
+  home-manager.users.may.programs.ssh = {
+    enable = true;
+    enableDefaultConfig = false;
+
+    matchBlocks.wt = {
+      hostname = "host.westminsterteak.com";
+      user = "adminster";
+      port = 22448;
+      setEnv.TERM = "xterm-256color";
+      identityFile = "~/.ssh/wt_rsa";
+    };
+
+    matchBlocks.host_wt = {
+      hostname = "hostv2.westminsterteak.com";
+      user = "admin";
+      port = 22448;
+      setEnv.TERM = "xterm-256color";
+      identityFile = "~/.ssh/wt_ed25519";
+    };
+
+    matchBlocks.site_wt = {
+      hostname = "50.28.84.195";
+      user = "admin";
+      port = 22450;
+      setEnv.TERM = "xterm-256color";
+      identityFile = "~/.ssh/wt_ed25519";
+    };
+  };
+
   home-manager.users.may.wayland.windowManager.hyprland.settings.exec-once = lib.mkAfter [
     (hyprOneLine ''
       sleep 2
