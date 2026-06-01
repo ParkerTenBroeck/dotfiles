@@ -8,29 +8,6 @@ let
       )
     ))}";
 
-  chromiumX11 = pkgs.symlinkJoin {
-    name = "chromium";
-    paths = [
-      (pkgs.writeShellScriptBin "chromium" ''
-        exec ${pkgs.chromium}/bin/chromium --ozone-platform=x11 "$@"
-      '')
-
-      (pkgs.makeDesktopItem {
-        name = "chromium";
-        desktopName = "Chromium";
-        genericName = "Web Browser";
-        exec = "chromium %U";
-        icon = "chromium";
-        categories = [ "Network" "WebBrowser" ];
-        mimeTypes = [
-          "text/html"
-          "x-scheme-handler/http"
-          "x-scheme-handler/https"
-        ];
-      })
-    ];
-  };
-
   hyprRun = pkgs.writeShellScript "hypr-run-igpu" ''
     export XDG_CURRENT_DESKTOP=Hyprland
     export XDG_SESSION_DESKTOP=Hyprland
@@ -127,14 +104,13 @@ in {
     '')
   ];
 
-  home-manager.users.may.home.packages = [
-    chromiumX11
-  ] ++ (with pkgs; [
+  home-manager.users.may.home.packages = with pkgs; [
+    chromium
     docker
     killall
     wayvnc
     wlr-randr
-  ]);
+  ];
 
   services.greetd = lib.mkIf (config.services.greetd.enable && config.programs.hyprland.enable) {
     settings = {
