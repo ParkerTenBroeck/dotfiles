@@ -20,7 +20,7 @@ let
 in {
   imports = [
     ./common.nix
-    /home/may/Documents/GitHub/mywt/nixos-wt-httpd.nix
+    /home/may/Documents/wt/server_config/modules/website
     ../modules/networking.nix
     ../modules/bluetooth.nix
     ../modules/fonts.nix
@@ -52,9 +52,14 @@ in {
     XCURSOR_SIZE = "24";
   };
 
-  services.wtLocal = {
+  services.wtSite = {
     enable = true;
-    root = "/home/may/Documents/GitHub/wt";
+    gitBase = "/home/may/Documents/wt/wt-git";
+    privBase = "/home/may/Documents/wt/wt-priv";
+    localBase = "/home/may/Documents/wt/wt-local";
+    envKind = "dev";
+    siteDomain = "www.wt.com";
+    portForwarding.enable = false;
     user = "may";
     group = "users";
   };
@@ -80,9 +85,17 @@ in {
     };
 
     matchBlocks.site_wt = {
-      hostname = "50.28.84.195";
+      hostname = "hostv2.westminsterteak.com";
       user = "admin";
       port = 22450;
+      setEnv.TERM = "xterm-256color";
+      identityFile = "~/.ssh/wt_ed25519";
+    };
+
+    matchBlocks.revprox_wt = {
+      hostname = "hostv2.westminsterteak.com";
+      user = "admin";
+      port = 22451;
       setEnv.TERM = "xterm-256color";
       identityFile = "~/.ssh/wt_ed25519";
     };
