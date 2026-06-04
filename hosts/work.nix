@@ -32,6 +32,9 @@ in {
 
   nixpkgs.config.allowUnfree = true;
 
+  virtualisation.docker.enable = true;
+  users.users.may.extraGroups = [ "docker" ];
+
   networking.hostName = "work";
   networking.firewall.allowedTCPPorts = [ 5900 8026 25565 42069 8000 8080 ];
 
@@ -57,6 +60,7 @@ in {
     gitBase = "/home/may/Documents/wt/wt-git";
     privBase = "/home/may/Documents/wt/wt-priv";
     localBase = "/home/may/Documents/wt/wt-local";
+    tmpBase = "/home/may/Documents/wt/wt-tmp";
     envKind = "dev";
     siteDomain = "www.wt.com";
     portForwarding.enable = false;
@@ -87,7 +91,7 @@ in {
     matchBlocks.site_wt = {
       hostname = "hostv2.westminsterteak.com";
       user = "admin";
-      port = 22450;
+      port = 22100;
       setEnv.TERM = "xterm-256color";
       identityFile = "~/.ssh/wt_ed25519";
     };
@@ -95,7 +99,23 @@ in {
     matchBlocks.revprox_wt = {
       hostname = "hostv2.westminsterteak.com";
       user = "admin";
-      port = 22451;
+      port = 22101;
+      setEnv.TERM = "xterm-256color";
+      identityFile = "~/.ssh/wt_ed25519";
+    };
+
+    matchBlocks.staging_wt = {
+      hostname = "hostv2.westminsterteak.com";
+      user = "admin";
+      port = 22102;
+      setEnv.TERM = "xterm-256color";
+      identityFile = "~/.ssh/wt_ed25519";
+    };   
+
+    matchBlocks.legacy_wt = {
+      hostname = "hostv2.westminsterteak.com";
+      user = "admin";
+      port = 22103;
       setEnv.TERM = "xterm-256color";
       identityFile = "~/.ssh/wt_ed25519";
     };
