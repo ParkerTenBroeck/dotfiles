@@ -4,7 +4,7 @@
   users.users.may = {
     isNormalUser = true;
     description = "may";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "storage" "video" "wheel" ];
   };
 
   home-manager.users.may = { pkgs, ... }: {

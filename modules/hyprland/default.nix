@@ -2,7 +2,7 @@
 
 let
   hyprRun = pkgs.writeShellScript "hypr-run" ''
-    exec ${pkgs.hyprland}/bin/Hyprland
+    exec ${pkgs.hyprland}/bin/start-hyprland
   '';
 in {
   imports = [
@@ -22,7 +22,6 @@ in {
   xdg.portal.enable = true;
   xdg.portal.extraPortals = with pkgs; [
     xdg-desktop-portal-hyprland
-    xdg-desktop-portal-gtk
   ];
 
   programs.hyprland.enable = true;

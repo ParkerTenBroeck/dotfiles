@@ -1,167 +1,245 @@
+{ lib, ... }:
+
+let
+  lua = lib.generators.mkLuaInline;
+  toLua = lib.generators.toLua { };
+
+  mod = key: lua ''mainMod .. " + ${key}"'';
+
+  bind = key: dispatcher: {
+    _args = [
+      key
+      (lua dispatcher)
+    ];
+  };
+
+  bindWith = key: dispatcher: options: {
+    _args = [
+      key
+      (lua dispatcher)
+      options
+    ];
+  };
+
+  exec = command: "hl.dsp.exec_cmd(${toLua command})";
+in
 {
   home-manager.users.may.wayland.windowManager.hyprland = {
     enable = true;
 
+    configType = "lua";
     xwayland.enable = true;
 
     package = null;
     portalPackage = null;
 
+    extraConfig = ''
+      local config_home = os.getenv("XDG_CONFIG_HOME") or (os.getenv("HOME") .. "/.config")
+      dofile(config_home .. "/hypr/monitors.lua")
+    '';
+
     settings = {
-      "$mainMod" = "SUPER";
+      mainMod = {
+        _var = "SUPER";
+      };
 
-      source = "~/.config/hypr/monitors.conf";
+      config = {
+        input = {
+          kb_layout = "us";
+          kb_variant = "";
+          kb_model = "";
+          kb_options = "";
+          kb_rules = "";
+          follow_mouse = 1;
+          # sensitivity = 0.7;
+          # accel_profile = "flat";
 
-      env = [];
+          touchpad = {
+            natural_scroll = true;
+          };
+        };
 
-      exec-once = [
-        "nwg-panel"
-        "wl-paste --type text --watch cliphist store"
-        "wl-paste --type image --watch cliphist store"
-        "nm-applet --indicator"
-        "blueman-applet"
-        "nwg-drawer -r -nofs"
-        "swww-daemon"
-      ];
+        general = {
+          gaps_in = 2;
+          gaps_out = 4;
+          border_size = 3;
+          col = {
+            active_border = {
+              colors = [
+                "rgba(ff0000ee)"
+                "rgba(ff7f00ee)"
+                "rgba(ffff00ee)"
+                "rgba(00ff00ee)"
+                "rgba(0000ffee)"
+                "rgba(9400d3ee)"
+              ];
+              angle = 45;
+            };
+            inactive_border = "rgba(595959aa)";
+          };
+          layout = "dwindle";
+        };
 
-      exec = [
-        "swww img /home/may/Pictures/background2.jpg"
-      ];
+        decoration = {
+          rounding = 10;
+        };
 
-      input = {
-        kb_layout = "us";
-        kb_variant = "";
-        kb_model = "";
-        kb_options = "";
-        kb_rules = "";
-        follow_mouse = 1;
-        # sensitivity = 0.7;
-        # accel_profile = "flat";
+        dwindle = {
+          preserve_split = true;
+        };
 
-        touchpad = {
-          natural_scroll = true;
+        misc = {
+          enable_anr_dialog = false;
+          disable_hyprland_logo = true;
+          disable_splash_rendering = true;
+          force_default_wallpaper = 0;
         };
       };
 
-      general = {
-        gaps_in = 2;
-        gaps_out = 4;
-        border_size = 3;
-        "col.active_border" = "rgba(ff0000ee) rgba(ff7f00ee) rgba(ffff00ee) rgba(00ff00ee) rgba(0000ffee) rgba(9400d3ee) 45deg";
-        "col.inactive_border" = "rgba(595959aa)";
-        layout = "dwindle";
-      };
-
-      decoration = {
-        rounding = 10;
-      };
-
-      animations = {
-        enabled = true;
-        bezier = "myBezier, 0.05, 0.9, 0.1, 1.05";
-        animation = [
-          "windows, 1, 7, myBezier"
-          "windowsOut, 1, 7, default, popin 80%"
-          "border, 1, 10, default"
-          "borderangle, 1, 8, default"
-          "fade, 1, 7, default"
-          "workspaces, 1, 6, default"
+      curve = {
+        _args = [
+          "myBezier"
+          {
+            type = "bezier";
+            points = [
+              [
+                0.05
+                0.9
+              ]
+              [
+                0.1
+                1.05
+              ]
+            ];
+          }
         ];
       };
 
-      dwindle = {
-        pseudotile = true;
-        preserve_split = true;
+      animation = [
+        {
+          leaf = "windows";
+          enabled = true;
+          speed = 7;
+          bezier = "myBezier";
+        }
+        {
+          leaf = "windowsOut";
+          enabled = true;
+          speed = 7;
+          bezier = "default";
+          style = "popin 80%";
+        }
+        {
+          leaf = "border";
+          enabled = true;
+          speed = 10;
+          bezier = "default";
+        }
+        {
+          leaf = "borderangle";
+          enabled = true;
+          speed = 8;
+          bezier = "default";
+        }
+        {
+          leaf = "fade";
+          enabled = true;
+          speed = 7;
+          bezier = "default";
+        }
+        {
+          leaf = "workspaces";
+          enabled = true;
+          speed = 6;
+          bezier = "default";
+        }
+      ];
+
+      gesture = {
+        fingers = 3;
+        direction = "horizontal";
+        action = "workspace";
       };
 
-      gestures = {
-        gesture = "3, horizontal, workspace";
-      };
-
-      "device:epic-mouse-v1" = {
-      };
-
-      misc = {
-        enable_anr_dialog = false;
-        disable_hyprland_logo = true;
-        disable_splash_rendering = true;
-        force_default_wallpaper = 0;
-      };
+      on = [
+        {
+          _args = [
+            "hyprland.start"
+            (lua ''
+              function()
+                hl.exec_cmd("nwg-panel")
+                hl.exec_cmd("wl-paste --type text --watch cliphist store")
+                hl.exec_cmd("wl-paste --type image --watch cliphist store")
+                hl.exec_cmd("nm-applet --indicator")
+                hl.exec_cmd("blueman-applet")
+                hl.exec_cmd("nwg-drawer -r -nofs")
+                hl.exec_cmd("swww-daemon")
+                hl.exec_cmd("swww img /home/may/Pictures/background2.jpg")
+              end
+            '')
+          ];
+        }
+      ];
 
       bind = [
-        "$mainMod, T, exec, alacritty"
-        "$mainMod, B, exec, firefox"
-        "SUPER_SHIFT, D, killactive,"
-        "CONTROL_ALT, delete, exit,"
-        "$mainMod, E, exec, nautilus"
-        "$mainMod, F, fullscreen,"
-        "$mainMod, M, fullscreen, 1"
-        "$mainMod, V, togglefloating,"
-        "$mainMod, P, pseudo,"
-        "$mainMod, J, togglesplit,"
-        "$mainMod, C, exec, hyprpicker --autocopy"
-        ", Print, exec, grimblast --freeze copysave area - | swappy -f -"
-        "$mainMod, 1, workspace, 1"
-        "$mainMod, 2, workspace, 2"
-        "$mainMod, 3, workspace, 3"
-        "$mainMod, 4, workspace, 4"
-        "$mainMod, 5, workspace, 5"
-        "$mainMod, 6, workspace, 6"
-        "$mainMod, 7, workspace, 7"
-        "$mainMod, 8, workspace, 8"
-        "$mainMod, 9, workspace, 9"
-        "$mainMod, 0, workspace, 10"
-        "$mainMod SHIFT, 1, movetoworkspace, 1"
-        "$mainMod SHIFT, 2, movetoworkspace, 2"
-        "$mainMod SHIFT, 3, movetoworkspace, 3"
-        "$mainMod SHIFT, 4, movetoworkspace, 4"
-        "$mainMod SHIFT, 5, movetoworkspace, 5"
-        "$mainMod SHIFT, 6, movetoworkspace, 6"
-        "$mainMod SHIFT, 7, movetoworkspace, 7"
-        "$mainMod SHIFT, 8, movetoworkspace, 8"
-        "$mainMod SHIFT, 9, movetoworkspace, 9"
-        "$mainMod SHIFT, 0, movetoworkspace, 10"
-        "$mainMod, mouse_down, workspace, e+1"
-        "$mainMod, mouse_up, workspace, e-1"
-        "$mainMod, left, movefocus, l"
-        "$mainMod, right, movefocus, r"
-        "$mainMod, up, movefocus, u"
-        "$mainMod, down, movefocus, d"
-        "$mainMod SHIFT, left, movewindow, l"
-        "$mainMod SHIFT, right, movewindow, r"
-        "$mainMod SHIFT, up, movewindow, u"
-        "$mainMod SHIFT, down, movewindow, d"
-      ];
-
-      bindr = [
-        "SUPER, SUPER_L, exec, nwg-drawer -nofs"
-      ];
-
-      binde = [
-        "$mainMod ALT, left, resizeactive, -10 0"
-        "$mainMod ALT, right, resizeactive, 10 0"
-        "$mainMod ALT, up, resizeactive, 0 -10"
-        "$mainMod ALT, down, resizeactive, 0 10"
-        ", XF86AudioRaiseVolume, exec, wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 1%+"
-        ", XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 1%-"
-        ", XF86MonBrightnessUp, exec, brightnessctl s +5%"
-        ", XF86MonBrightnessDown, exec, brightnessctl s 5%-"
-      ];
-
-      bindl = [
-        ", XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
-        ", XF86AudioPlay, exec, playerctl play-pause"
-        ", XF86AudioNext, exec, playerctl next"
-        ", XF86AudioPrev, exec, playerctl previous"
-      ];
-
-      bindle = [
-        ", XF86Search, exec, launchpad"
-      ];
-
-      bindm = [
-        "$mainMod, mouse:272, movewindow"
-        "$mainMod, mouse:273, resizewindow"
+        (bind (mod "T") (exec "kitty"))
+        (bind (mod "B") (exec "firefox"))
+        (bind "SUPER + SHIFT + D" "hl.dsp.window.close()")
+        (bind "CONTROL + ALT + delete" "hl.dsp.exit()")
+        (bind (mod "E") (exec "nautilus"))
+        (bind (mod "F") "hl.dsp.window.fullscreen()")
+        (bind (mod "M") "hl.dsp.window.fullscreen(1)")
+        (bind (mod "V") ''hl.dsp.window.float({ action = "toggle" })'')
+        (bind (mod "P") "hl.dsp.window.pseudo()")
+        (bind (mod "J") ''hl.dsp.layout("togglesplit")'')
+        (bind (mod "C") (exec "hyprpicker --autocopy"))
+        (bind "Print" (exec "grimblast --freeze copysave area - | swappy -f -"))
+        (bind (mod "1") "hl.dsp.focus({ workspace = 1 })")
+        (bind (mod "2") "hl.dsp.focus({ workspace = 2 })")
+        (bind (mod "3") "hl.dsp.focus({ workspace = 3 })")
+        (bind (mod "4") "hl.dsp.focus({ workspace = 4 })")
+        (bind (mod "5") "hl.dsp.focus({ workspace = 5 })")
+        (bind (mod "6") "hl.dsp.focus({ workspace = 6 })")
+        (bind (mod "7") "hl.dsp.focus({ workspace = 7 })")
+        (bind (mod "8") "hl.dsp.focus({ workspace = 8 })")
+        (bind (mod "9") "hl.dsp.focus({ workspace = 9 })")
+        (bind (mod "0") "hl.dsp.focus({ workspace = 10 })")
+        (bind (mod "SHIFT + 1") "hl.dsp.window.move({ workspace = 1 })")
+        (bind (mod "SHIFT + 2") "hl.dsp.window.move({ workspace = 2 })")
+        (bind (mod "SHIFT + 3") "hl.dsp.window.move({ workspace = 3 })")
+        (bind (mod "SHIFT + 4") "hl.dsp.window.move({ workspace = 4 })")
+        (bind (mod "SHIFT + 5") "hl.dsp.window.move({ workspace = 5 })")
+        (bind (mod "SHIFT + 6") "hl.dsp.window.move({ workspace = 6 })")
+        (bind (mod "SHIFT + 7") "hl.dsp.window.move({ workspace = 7 })")
+        (bind (mod "SHIFT + 8") "hl.dsp.window.move({ workspace = 8 })")
+        (bind (mod "SHIFT + 9") "hl.dsp.window.move({ workspace = 9 })")
+        (bind (mod "SHIFT + 0") "hl.dsp.window.move({ workspace = 10 })")
+        (bind (mod "mouse_down") ''hl.dsp.focus({ workspace = "e+1" })'')
+        (bind (mod "mouse_up") ''hl.dsp.focus({ workspace = "e-1" })'')
+        (bind (mod "left") ''hl.dsp.focus({ direction = "left" })'')
+        (bind (mod "right") ''hl.dsp.focus({ direction = "right" })'')
+        (bind (mod "up") ''hl.dsp.focus({ direction = "up" })'')
+        (bind (mod "down") ''hl.dsp.focus({ direction = "down" })'')
+        (bind (mod "SHIFT + left") ''hl.dsp.window.move({ direction = "left" })'')
+        (bind (mod "SHIFT + right") ''hl.dsp.window.move({ direction = "right" })'')
+        (bind (mod "SHIFT + up") ''hl.dsp.window.move({ direction = "up" })'')
+        (bind (mod "SHIFT + down") ''hl.dsp.window.move({ direction = "down" })'')
+        (bindWith "SUPER + SUPER_L" (exec "nwg-drawer -nofs") { release = true; })
+        (bindWith (mod "mouse:272") "hl.dsp.window.drag()" { mouse = true; })
+        (bindWith (mod "mouse:273") "hl.dsp.window.resize()" { mouse = true; })
+        (bindWith (mod "ALT + left") ''hl.dsp.window.resize({ x = -10, y = 0, relative = true })'' { repeating = true; })
+        (bindWith (mod "ALT + right") ''hl.dsp.window.resize({ x = 10, y = 0, relative = true })'' { repeating = true; })
+        (bindWith (mod "ALT + up") ''hl.dsp.window.resize({ x = 0, y = -10, relative = true })'' { repeating = true; })
+        (bindWith (mod "ALT + down") ''hl.dsp.window.resize({ x = 0, y = 10, relative = true })'' { repeating = true; })
+        (bindWith "XF86AudioRaiseVolume" (exec "wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 1%+") { repeating = true; })
+        (bindWith "XF86AudioLowerVolume" (exec "wpctl set-volume @DEFAULT_AUDIO_SINK@ 1%-") { repeating = true; })
+        (bindWith "XF86MonBrightnessUp" (exec "brightnessctl s +5%") { repeating = true; })
+        (bindWith "XF86MonBrightnessDown" (exec "brightnessctl s 5%-") { repeating = true; })
+        (bindWith "XF86AudioMute" (exec "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle") { locked = true; })
+        (bindWith "XF86AudioPlay" (exec "playerctl play-pause") { locked = true; })
+        (bindWith "XF86AudioNext" (exec "playerctl next") { locked = true; })
+        (bindWith "XF86AudioPrev" (exec "playerctl previous") { locked = true; })
+        (bindWith "XF86Search" (exec "launchpad") { locked = true; repeating = true; })
       ];
     };
   };

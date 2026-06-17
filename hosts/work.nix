@@ -1,6 +1,9 @@
 { pkgs, lib, config, ... }:
 
 let
+  lua = lib.generators.mkLuaInline;
+  toLua = lib.generators.toLua { };
+
   hyprOneLine = script:
     "sh -c ${lib.escapeShellArg (lib.concatStringsSep "; " (
       builtins.filter (line: line != "") (
@@ -121,20 +124,29 @@ in {
     };
   };
 
-  home-manager.users.may.wayland.windowManager.hyprland.settings.exec-once = lib.mkAfter [
-    (hyprOneLine ''
-      sleep 2
+  home-manager.users.may.wayland.windowManager.hyprland.settings.on = lib.mkAfter [
+    {
+      _args = [
+        "hyprland.start"
+        (lua ''
+          function()
+            hl.exec_cmd(${toLua (hyprOneLine ''
+              sleep 2
 
-      hyprctl dispatch exec "[workspace 1 silent] chromium --restore-last-session"
+              hyprctl dispatch exec "[workspace 1 silent] chromium --restore-last-session"
 
-      hyprctl dispatch exec "[workspace 2 silent] code /home/may/Documents/GitHub/wt"
-      hyprctl dispatch exec "[workspace 2 silent] alacritty --working-directory /home/may/Documents/GitHub/wt"
+              hyprctl dispatch exec "[workspace 2 silent] code /home/may/Documents/GitHub/wt"
+              hyprctl dispatch exec "[workspace 2 silent] alacritty --working-directory /home/may/Documents/GitHub/wt"
 
-      hyprctl dispatch exec "[workspace 2 silent] code /home/may/Documents/GitHub/mywt"
-      hyprctl dispatch exec "[workspace 2 silent] alacritty --working-directory /home/may/Documents/GitHub/mywt"
+              hyprctl dispatch exec "[workspace 2 silent] code /home/may/Documents/GitHub/mywt"
+              hyprctl dispatch exec "[workspace 2 silent] alacritty --working-directory /home/may/Documents/GitHub/mywt"
 
-      hyprctl dispatch exec "[workspace 4 silent] firefox"
-    '')
+              hyprctl dispatch exec "[workspace 4 silent] firefox"
+            '')})
+          end
+        '')
+      ];
+    }
   ];
 
   home-manager.users.may.home.packages = with pkgs; [
