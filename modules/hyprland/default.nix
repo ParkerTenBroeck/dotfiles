@@ -110,7 +110,7 @@ in {
       nwg-panel    # top bar
 
       # wallpaper
-      swww
+      awww
 
       # media controls
       playerctl

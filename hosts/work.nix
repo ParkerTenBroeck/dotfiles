@@ -20,10 +20,15 @@ let
 
     exec ${pkgs.hyprland}/bin/Hyprland
   '';
+
+  sshTmux = {
+    # RequestTTY = "force";
+    # RemoteCommand = "[[ $- != *i* ]] && return; tmux new-session -A -s parker";
+  };
 in {
   imports = [
     ./common.nix
-    /home/may/Documents/wt/server_config/modules/website
+    /home/may/Documents/wt/system_config/modules/website
     ../modules/networking.nix
     ../modules/bluetooth.nix
     ../modules/fonts.nix
@@ -53,75 +58,82 @@ in {
   services.xserver.videoDrivers = [ "modesetting" ];
 
   environment.sessionVariables = {
-    WLR_DRM_DEVICES = "/dev/dri/by-path/pci-0000:00:02.0-card";
-    _JAVA_AWT_WM_NONREPARENTING = "1";
     XCURSOR_SIZE = "24";
   };
 
   services.wtSite = {
     enable = true;
-    gitBase = "/home/may/Documents/wt/wt-git";
-    privBase = "/home/may/Documents/wt/wt-priv";
-    localBase = "/home/may/Documents/wt/wt-local";
-    tmpBase = "/home/may/Documents/wt/wt-tmp";
+    paths.root = "/home/may/Documents/wt";
     envKind = "dev";
     siteDomain = "www.wt.com";
     portForwarding.enable = false;
     user = "may";
     group = "users";
+    httpCache = {
+      enable = false;
+      maxAge = 86400;
+    };
   };
 
   home-manager.users.may.programs.ssh = {
     enable = true;
     enableDefaultConfig = false;
 
-    matchBlocks.wt = {
-      hostname = "host.westminsterteak.com";
-      user = "adminster";
-      port = 22448;
-      setEnv.TERM = "xterm-256color";
-      identityFile = "~/.ssh/wt_rsa";
+    settings.wt = {
+      HostName = "host.westminsterteak.com";
+      User = "adminster";
+      Port = 22448;
+      SetEnv.TERM = "xterm-256color";
+      IdentityFile = "~/.ssh/wt_rsa";
     };
 
-    matchBlocks.host_wt = {
-      hostname = "hostv2.westminsterteak.com";
-      user = "admin";
-      port = 22448;
-      setEnv.TERM = "xterm-256color";
-      identityFile = "~/.ssh/wt_ed25519";
+    settings.wt_root = {
+      HostName = "host.westminsterteak.com";
+      User = "root";
+      Port = 22448;
+      SetEnv.TERM = "xterm-256color";
+      IdentityFile = "~/.ssh/wt_rsa";
     };
 
-    matchBlocks.site_wt = {
-      hostname = "hostv2.westminsterteak.com";
-      user = "admin";
-      port = 22100;
-      setEnv.TERM = "xterm-256color";
-      identityFile = "~/.ssh/wt_ed25519";
+    settings.host_wt = {
+      HostName = "hostv2.westminsterteak.com";
+      User = "admin";
+      Port = 22448;
+      SetEnv.TERM = "xterm-256color";
+      IdentityFile = "~/.ssh/wt_ed25519";
     };
 
-    matchBlocks.revprox_wt = {
-      hostname = "hostv2.westminsterteak.com";
-      user = "admin";
-      port = 22101;
-      setEnv.TERM = "xterm-256color";
-      identityFile = "~/.ssh/wt_ed25519";
-    };
+    settings.prod_wt = {
+      HostName = "hostv2.westminsterteak.com";
+      User = "admin";
+      Port = 22100;
+      SetEnv.TERM = "xterm-256color";
+      IdentityFile = "~/.ssh/wt_ed25519";
+    } // sshTmux;
 
-    matchBlocks.staging_wt = {
-      hostname = "hostv2.westminsterteak.com";
-      user = "admin";
-      port = 22102;
-      setEnv.TERM = "xterm-256color";
-      identityFile = "~/.ssh/wt_ed25519";
-    };   
+    settings.revprox_wt = {
+      HostName = "hostv2.westminsterteak.com";
+      User = "admin";
+      Port = 22101;
+      SetEnv.TERM = "xterm-256color";
+      IdentityFile = "~/.ssh/wt_ed25519";
+    } // sshTmux;
 
-    matchBlocks.legacy_wt = {
-      hostname = "hostv2.westminsterteak.com";
-      user = "admin";
-      port = 22103;
-      setEnv.TERM = "xterm-256color";
-      identityFile = "~/.ssh/wt_ed25519";
-    };
+    settings.staging_wt = {
+      HostName = "hostv2.westminsterteak.com";
+      User = "admin";
+      Port = 22102;
+      SetEnv.TERM = "xterm-256color";
+      IdentityFile = "~/.ssh/wt_ed25519";
+    } // sshTmux;
+
+    settings.legacy_wt = {
+      HostName = "hostv2.westminsterteak.com";
+      User = "admin";
+      Port = 22103;
+      SetEnv.TERM = "xterm-256color";
+      IdentityFile = "~/.ssh/wt_ed25519";
+    } // sshTmux;
   };
 
   home-manager.users.may.wayland.windowManager.hyprland.settings.on = lib.mkAfter [
@@ -134,14 +146,6 @@ in {
               sleep 2
 
               hyprctl dispatch exec "[workspace 1 silent] chromium --restore-last-session"
-
-              hyprctl dispatch exec "[workspace 2 silent] code /home/may/Documents/GitHub/wt"
-              hyprctl dispatch exec "[workspace 2 silent] alacritty --working-directory /home/may/Documents/GitHub/wt"
-
-              hyprctl dispatch exec "[workspace 2 silent] code /home/may/Documents/GitHub/mywt"
-              hyprctl dispatch exec "[workspace 2 silent] alacritty --working-directory /home/may/Documents/GitHub/mywt"
-
-              hyprctl dispatch exec "[workspace 4 silent] firefox"
             '')})
           end
         '')
@@ -165,5 +169,5 @@ in {
     };
   };
 
-  home-manager.users.may.home.stateVersion = "25.11";
+  home-manager.users.may.home.stateVersion = "26.05";
 }

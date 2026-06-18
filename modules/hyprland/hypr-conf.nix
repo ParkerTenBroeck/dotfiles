@@ -173,8 +173,8 @@ in
                 hl.exec_cmd("nm-applet --indicator")
                 hl.exec_cmd("blueman-applet")
                 hl.exec_cmd("nwg-drawer -r -nofs")
-                hl.exec_cmd("swww-daemon")
-                hl.exec_cmd("swww img /home/may/Pictures/background2.jpg")
+                hl.exec_cmd("awww-daemon")
+                hl.exec_cmd("awww img /home/may/Pictures/background2.jpg")
               end
             '')
           ];
