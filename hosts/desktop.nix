@@ -17,12 +17,15 @@ in
     ../modules/wireguard-server.nix
     ../modules/hyprland
     ../modules/tex.nix
+    ../modules/forgejo.nix
+    ../modules/revprox.nix
   ];
 
   nixpkgs.config.allowUnfree = true;
 
   networking.hostName = "desktop";
-  networking.firewall.allowedTCPPorts = [ 51820 25565 42069 8000 8080 ];
+  networking.firewall.allowedTCPPorts = [ 51820 25565 42069 8000 8080 80 443 ];
+
 
   home-manager.users.may.wayland.windowManager.hyprland.settings = {
     workspace_rule = [
