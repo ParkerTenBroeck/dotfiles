@@ -5,7 +5,7 @@
     ../modules/bluetooth.nix
     ../modules/games/steam.nix
     ../modules/games/minecraft.nix
-    ../modules/hyprland
+    ../modules/kde
     ../modules/nvidia.nix
   ];
 
