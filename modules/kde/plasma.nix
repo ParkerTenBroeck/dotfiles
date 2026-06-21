@@ -240,7 +240,13 @@
 
       kcminputrc.Touchpad.NaturalScroll = true;
 
-      "plasma-localerc".Formats.LANG = "en_US.UTF-8";
+      "plasma-localerc" = {
+        Formats = {
+          LANG = "en_CA.UTF-8";
+          LC_MEASUREMENT = "en_CA.UTF-8";
+        };
+        Translations.LANGUAGE = "en_GB";
+      };
     };
 
   };
