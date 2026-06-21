@@ -248,6 +248,5 @@
         Translations.LANGUAGE = "en_GB";
       };
     };
-
   };
 }
