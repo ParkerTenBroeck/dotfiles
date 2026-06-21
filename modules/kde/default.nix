@@ -1,4 +1,4 @@
-let
+{ pkgs, ...}: let
   # nixpkgs master Plasma 6.7.0. 
   plasmaNixpkgs = builtins.fetchTarball {
     url = "https://github.com/NixOS/nixpkgs/archive/a6dd75750046a77baa093c1f3cc606b1c53053c9.tar.gz";
@@ -26,6 +26,14 @@ in {
   services.xserver.enable = true;
   services.displayManager.sddm.enable = true;
   services.desktopManager.plasma6.enable = true;
+
+  environment.plasma6.excludePackages = with pkgs.kdePackages; [
+    konsole
+  ];
+  services.xserver.excludePackages = with pkgs; [
+    xterm
+  ];
+
 
   programs.dconf.enable = true;
   security.polkit.enable = true;

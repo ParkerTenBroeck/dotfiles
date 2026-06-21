@@ -12,12 +12,12 @@
     programs.vscode.enable = true;
 
     home.packages = with pkgs; [
-      firefox             # browser
-      nautilus            # gui file manager
-      imv                 # image viewer
-      file-roller         # archive manager
+      firefox               # browser
+      kdePackages.dolphin   # gui file manager
+      imv                   # image viewer
+      file-roller           # archive manager
       gnome-disk-utility
-      vlc                 # video player
+      vlc                   # video player
     ];
   };
 }

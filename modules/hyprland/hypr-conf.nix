@@ -186,7 +186,7 @@ in
         (bind (mod "B") (exec "firefox"))
         (bind "SUPER + SHIFT + D" "hl.dsp.window.close()")
         (bind "CONTROL + ALT + delete" "hl.dsp.exit()")
-        (bind (mod "E") (exec "nautilus"))
+        (bind (mod "E") (exec "dolphin"))
         (bind (mod "F") "hl.dsp.window.fullscreen()")
         (bind (mod "M") "hl.dsp.window.fullscreen(1)")
         (bind (mod "V") ''hl.dsp.window.float({ action = "toggle" })'')

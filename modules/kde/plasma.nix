@@ -47,6 +47,13 @@
       repeatRate = 25;
     };
 
+    krunner.shortcuts.launch = [
+      "Meta"
+      "Alt+Space"
+      "Alt+F2"
+      "Search"
+    ];
+
     powerdevil.AC.autoSuspend.action = "nothing";
 
     kscreenlocker = {
@@ -98,21 +105,6 @@
       tiling.padding = 16;
     };
 
-    window-rules = [
-      {
-        description = "Force window borders";
-        match.window-types = [
-          "normal"
-          "dialog"
-          "utility"
-        ];
-        apply.noborder = {
-          value = false;
-          apply = "force";
-        };
-      }
-    ];
-
     hotkeys.commands = {
       launch-kitty = {
         name = "Kitty";
@@ -142,12 +134,6 @@
         logs.enabled = false;
       };
 
-      launch-krunner = {
-        name = "Application Launcher";
-        key = "Search";
-        command = "krunner";
-        logs.enabled = false;
-      };
     };
 
     shortcuts = {
@@ -196,6 +182,8 @@
       };
 
       ksmserver."Log Out" = "Ctrl+Alt+Del";
+
+      plasmashell."activate application launcher" = "none";
 
       kmix = {
         increase_volume = "Volume Up";
