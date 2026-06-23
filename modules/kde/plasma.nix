@@ -64,7 +64,8 @@
     panels = [
       {
         location = "top";
-        screen = "all";
+        # this is stupid "all" doesn't work because of course
+        screen = [ 0 1 2 3 ];
         widgets = [
           "org.kde.plasma.kickoff"
           {
@@ -77,7 +78,9 @@
           "org.kde.plasma.icontasks"
           "org.kde.plasma.marginsseparator"
           "org.kde.plasma.systemtray"
-          "org.kde.plasma.digitalclock"
+          {
+            digitalClock.time.format = "24h";
+          }
         ];
       }
     ];
