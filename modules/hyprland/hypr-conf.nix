@@ -22,6 +22,18 @@ let
   };
 
   exec = command: "hl.dsp.exec_cmd(${toLua command})";
+
+  toggleMaximize = ''
+    function()
+      local window = hl.get_active_window()
+
+      if window and window.fullscreen ~= 0 then
+        hl.dispatch(hl.dsp.window.fullscreen_state({ internal = 0, client = 0 }))
+      else
+        hl.dispatch(hl.dsp.window.fullscreen_state({ internal = 1, client = 0 }))
+      end
+    end
+  '';
 in
 {
   home-manager.users.may.wayland.windowManager.hyprland = {
@@ -188,7 +200,7 @@ in
         (bind "CONTROL + ALT + delete" "hl.dsp.exit()")
         (bind (mod "E") (exec "dolphin"))
         (bind (mod "F") "hl.dsp.window.fullscreen()")
-        (bind (mod "M") "hl.dsp.window.fullscreen(1)")
+        (bind (mod "M") toggleMaximize)
         (bind (mod "V") ''hl.dsp.window.float({ action = "toggle" })'')
         (bind (mod "P") "hl.dsp.window.pseudo()")
         (bind (mod "J") ''hl.dsp.layout("togglesplit")'')
