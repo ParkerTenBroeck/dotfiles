@@ -8,5 +8,6 @@
     ../modules/ssh.nix
     ../modules/git.nix
     ../modules/cli.nix
+    ../modules/networking.nix
   ];
 }

@@ -13,14 +13,18 @@
 
   networking.hostName = "thinkpad";
 
-  services.xserver.videoDrivers = [ "modesetting" "nvidia" ];
+  services.xserver.videoDrivers = [ 
+    "modesetting" 
+     "nvidia" 
+    ];
 
   hardware.nvidia.prime = {
-    offload.enable = true;
-    intelBusId = "PCI:0:2:0";
-    nvidiaBusId = "PCI:0:0:0";
+     offload.enable = true;
+     intelBusId = "PCI:0:2:0";
+     nvidiaBusId = "PCI:0:0:0";
   };
 
+  networking.firewall.allowedTCPPorts = [ 8000 8080 ];
 
   home-manager.users.may.home.stateVersion = "26.05";
 }

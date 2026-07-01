@@ -9,7 +9,10 @@
 
   home-manager.users.may = { config, lib, pkgs, ... }: {
     
-    programs.vscode.enable = true;
+    programs.vscode = {
+      package = pkgs.vscode.fhs;
+      enable = true;
+    };
 
     home.packages = with pkgs; [
       firefox               # browser

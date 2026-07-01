@@ -1,17 +1,4 @@
-{ pkgs, ...}: let
-  # nixpkgs master Plasma 6.7.0. 
-  plasmaNixpkgs = builtins.fetchTarball {
-    url = "https://github.com/NixOS/nixpkgs/archive/a6dd75750046a77baa093c1f3cc606b1c53053c9.tar.gz";
-    sha256 = "1wq2wibvn41d6ynpfxc5v4kpl49p5j4spb816h36iddql54kbcy2";
-  };
-in {
-  nixpkgs.overlays = [
-    (_final: stable: {
-      kdePackages = (import plasmaNixpkgs {
-        inherit (stable.stdenv.hostPlatform) system;
-      }).kdePackages;
-    })
-  ];
+{ pkgs, ...}: {
 
   imports = [
     # assume any desktop env will have audio
@@ -25,7 +12,6 @@ in {
 
   services.xserver.enable = true;
   services.displayManager.sddm.enable = true;
-  systemd.services.display-manager.environment.LANG = "en_GB.UTF-8";
   services.desktopManager.plasma6.enable = true;
 
   environment.plasma6.excludePackages = with pkgs.kdePackages; [
@@ -81,6 +67,7 @@ in {
       brightnessctl
       kdePackages.dolphin
       kdePackages.kcolorchooser
+      kdePackages.krohnkite
       playerctl
       pavucontrol
     ];

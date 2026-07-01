@@ -163,25 +163,43 @@
         "Window to Desktop 9" = "none";
         "Window to Desktop 10" = "none";
 
-        "Switch Window Left" = "Meta+Left";
-        "Switch Window Right" = "Meta+Right";
-        "Switch Window Up" = "Meta+Up";
-        "Switch Window Down" = "Meta+Down";
+        KrohnkiteFocusLeft = "Meta+Left";
+        KrohnkiteFocusRight = "Meta+Right";
+        KrohnkiteFocusUp = "Meta+Up";
+        KrohnkiteFocusDown = "Meta+Down";
+        "Switch Window Left" = "none";
+        "Switch Window Right" = "none";
+        "Switch Window Up" = "none";
+        "Switch Window Down" = "none";
 
-        "Window Quick Tile Left" = "Meta+Shift+Left";
-        "Window Quick Tile Right" = "Meta+Shift+Right";
-        "Window Quick Tile Top" = "Meta+Shift+Up";
-        "Window Quick Tile Bottom" = "Meta+Shift+Down";
+        KrohnkiteShiftLeft = "Meta+Shift+Left";
+        KrohnkiteShiftRight = "Meta+Shift+Right";
+        KrohnkiteShiftUp = "Meta+Shift+Up";
+        KrohnkiteShiftDown = "Meta+Shift+Down";
+        "Window Quick Tile Left" = "none";
+        "Window Quick Tile Right" = "none";
+        "Window Quick Tile Top" = "none";
+        "Window Quick Tile Bottom" = "none";
+
+        KrohnkiteShrinkWidth = "Meta+Alt+Left";
+        KrohnkitegrowWidth = "Meta+Alt+Right";
+        KrohnkiteShrinkHeight = "Meta+Alt+Up";
+        KrohnkiteGrowHeight = "Meta+Alt+Down";
 
         "Switch to Next Desktop" = "Meta+WheelDown";
         "Switch to Previous Desktop" = "Meta+WheelUp";
 
+        KrohnkiteMonocleLayout = "Meta+M";
+
+        KrohnkiteRotate = "Meta+K";
+        KrohnkiteToggleFloat = "Meta+V";
+
         "Window Close" = "Meta+Shift+D";
         "Window Fullscreen" = "Meta+F";
-        "Window Maximize" = "Meta+M";
-        "Window Operations Menu" = "Meta+V";
-        "Window Move" = "Meta+Alt+Left";
-        "Window Resize" = "Meta+Alt+Right";
+        "Window Maximize" = "none";
+        "Window Operations Menu" = "none";
+        "Window Move" = "none";
+        "Window Resize" = "none";
       };
 
       ksmserver."Log Out" = "Ctrl+Alt+Del";
@@ -205,6 +223,33 @@
       kwinrc = {
         "Effect-overview".BorderActivate = 9;
 
+        "Script-krohnkite" = {
+          adjustLayout = true;
+          adjustLayoutLive = true;
+          directionalKeyDwm = false;
+          directionalKeyFocus = true;
+          floatUtility = true;
+          keepTilingOnDrag = true;
+          layoutPerDesktop = true;
+          monocleMaximize = false;
+          newWindowPosition = 0;
+          noTileBorder = false;
+
+          screenGapBottom = 4;
+          screenGapBetween = 4;
+          screenGapLeft = 4;
+          screenGapRight = 4;
+          screenGapTop = 4;
+
+          soleWindowNoBorders = false;
+          soleWindowNoGaps = false;
+          notificationDuration = 0;
+          columnsLayoutOrder = 1;
+          tileLayoutOrder = 7;
+          floatingLayoutOrder = 9;
+          binaryTreeLayoutOrder = 11;
+        };
+
         MouseBindings = {
           CommandAllKey = "Meta";
           CommandAll1 = "Activate, raise and move";
@@ -213,6 +258,7 @@
 
         Plugins = {
           desktopchangeosdEnabled = true;
+          krohnkiteEnabled = true;
         };
         TabBox.HighlightWindows = true;
 
