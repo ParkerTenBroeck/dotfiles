@@ -36,6 +36,7 @@ in {
     ../modules/tex.nix
     ../modules/docker.nix
     ../modules/hyprland
+    ../modules/nvidia.nix
   ];
 
   nixpkgs.config.allowUnfree = true;
@@ -53,9 +54,16 @@ in {
     enable32Bit = true;
   };
 
-  hardware.nvidiaOptimus.disable = true;
+  # hardware.nvidiaOptimus.disable = true;
+  # services.xserver.videoDrivers = [ "modesetting" ];
+  services.xserver.videoDrivers = [ "modesetting" "nvidia" ];
 
-  services.xserver.videoDrivers = [ "modesetting" ];
+  hardware.nvidia.prime = {
+    offload.enable = true;
+    intelBusId = "PCI:0:2:0";
+    nvidiaBusId = "PCI:0:0:0";
+  };
+
 
   environment.sessionVariables = {
     XCURSOR_SIZE = "24";
@@ -66,6 +74,17 @@ in {
     paths.root = "/home/may/Documents/wt";
     envKind = "dev";
     siteDomain = "www.wt.com";
+    xdebug = {
+      enable = true;
+        mode = "debug";
+        startWithRequest = "yes";
+        discoverClientHost = false;
+        clientHost = "127.0.0.1";
+        clientPort = 9003;
+        log = "/tmp/xdebug.log";
+        idekey = "VSCODE";
+    };
+
     portForwarding.enable = false;
     user = "may";
     group = "users";
