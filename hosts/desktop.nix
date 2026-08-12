@@ -15,7 +15,7 @@ in
     ../modules/fonts.nix
     ../modules/packages.nix
     ../modules/wireguard-server.nix
-    ../modules/hyprland
+    ../modules/kde
     ../modules/tex.nix
     ../modules/forgejo.nix
     ../modules/revprox.nix
@@ -26,7 +26,7 @@ in
   networking.hostName = "desktop";
   networking.firewall.allowedTCPPorts = [ 51820 25565 42069 8000 8080 80 443 ];
 
-
+  /*
   home-manager.users.may.wayland.windowManager.hyprland.settings = {
     workspace_rule = [
       {
@@ -61,7 +61,8 @@ in
       }
     ];
   };
+  */
 
   system.stateVersion = "23.11";
-  home-manager.users.may.home.stateVersion = "25.11";
+  home-manager.users.may.home.stateVersion = "26.11";
 }

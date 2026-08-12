@@ -269,9 +269,11 @@
           CenterSnapZone = 0;
           DelayFocusInterval = 0;
           FocusPolicy = "FocusFollowsMouse";
+          # Keep a single keyboard-focus target across screens so KWin shortcuts
+          # act on the window under the pointer without requiring a click first.
+          SeparateScreenFocus = false;
           GeometryTip = false;
           PerOutputVirtualDesktops = true;
-          SeparateScreenFocus = true;
           WindowSnapZone = 10;
         };
 
