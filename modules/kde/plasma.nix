@@ -267,6 +267,7 @@
 
         Plugins = {
           desktopchangeosdEnabled = true;
+          "follow-moved-window-to-desktopEnabled" = true;
           krohnkiteEnabled = true;
         };
         TabBox.HighlightWindows = true;
