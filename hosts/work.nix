@@ -1,26 +1,6 @@
 { pkgs, lib, config, ... }:
 
 let
-  lua = lib.generators.mkLuaInline;
-  toLua = lib.generators.toLua { };
-
-  hyprOneLine = script:
-    "sh -c ${lib.escapeShellArg (lib.concatStringsSep "; " (
-      builtins.filter (line: line != "") (
-        map lib.trim (lib.splitString "\n" script)
-      )
-    ))}";
-
-  hyprRun = pkgs.writeShellScript "hypr-run-igpu" ''
-    export XDG_CURRENT_DESKTOP=Hyprland
-    export XDG_SESSION_DESKTOP=Hyprland
-    export WLR_DRM_DEVICES=/dev/dri/by-path/pci-0000:00:02.0-card
-    export _JAVA_AWT_WM_NONREPARENTING=1
-    export XCURSOR_SIZE=24
-
-    exec ${pkgs.hyprland}/bin/Hyprland
-  '';
-
   sshTmux = {
     # RequestTTY = "force";
     # RemoteCommand = "[[ $- != *i* ]] && return; tmux new-session -A -s parker";
@@ -28,16 +8,21 @@ let
 in {
   imports = [
     ./common.nix
-    /home/may/Documents/wt/system_config/modules/website
     ../modules/networking.nix
     ../modules/bluetooth.nix
     ../modules/fonts.nix
     ../modules/packages.nix
-    ../modules/tex.nix
+    # ../modules/tex.nix
     ../modules/docker.nix
-    ../modules/hyprland
+    ../modules/kde
     ../modules/nvidia.nix
   ];
+
+
+   networking.extraHosts = ''
+      127.0.0.1 wt.com www.wt.com wt.com
+      ::1 wt.com www.wt.com wt.com    
+  '';
 
   nixpkgs.config.allowUnfree = true;
 
@@ -45,7 +30,7 @@ in {
   users.users.may.extraGroups = [ "docker" ];
 
   networking.hostName = "work";
-  networking.firewall.allowedTCPPorts = [ 5900 8026 25565 42069 8000 8080 ];
+  networking.firewall.allowedTCPPorts = [ 5900 8026 25565 42069 8000 8080 9003 ];
 
   programs.nix-ld.enable = true;
 
@@ -62,36 +47,6 @@ in {
     offload.enable = true;
     intelBusId = "PCI:0:2:0";
     nvidiaBusId = "PCI:0:0:0";
-  };
-
-
-  environment.sessionVariables = {
-    XCURSOR_SIZE = "24";
-  };
-
-  services.wtSite = {
-    enable = true;
-    paths.root = "/home/may/Documents/wt";
-    envKind = "dev";
-    siteDomain = "www.wt.com";
-    xdebug = {
-      enable = true;
-        mode = "debug";
-        startWithRequest = "yes";
-        discoverClientHost = false;
-        clientHost = "127.0.0.1";
-        clientPort = 9003;
-        log = "/tmp/xdebug.log";
-        idekey = "VSCODE";
-    };
-
-    portForwarding.enable = false;
-    user = "may";
-    group = "users";
-    httpCache = {
-      enable = false;
-      maxAge = 86400;
-    };
   };
 
   home-manager.users.may.programs.ssh = {
@@ -153,24 +108,17 @@ in {
       SetEnv.TERM = "xterm-256color";
       IdentityFile = "~/.ssh/wt_ed25519";
     } // sshTmux;
+
+    settings.testing_wt = {
+      HostName = "hostv2.westminsterteak.com";
+      User = "admin";
+      Port = 22104;
+      SetEnv.TERM = "xterm-256color";
+      IdentityFile = "~/.ssh/wt_ed25519";
+    } // sshTmux;
   };
 
-  home-manager.users.may.wayland.windowManager.hyprland.settings.on = lib.mkAfter [
-    {
-      _args = [
-        "hyprland.start"
-        (lua ''
-          function()
-            hl.exec_cmd(${toLua (hyprOneLine ''
-              sleep 2
 
-              hyprctl dispatch exec "[workspace 1 silent] chromium --restore-last-session"
-            '')})
-          end
-        '')
-      ];
-    }
-  ];
 
   home-manager.users.may.home.packages = with pkgs; [
     chromium
@@ -180,13 +128,5 @@ in {
     wlr-randr
   ];
 
-  services.greetd = lib.mkIf (config.services.greetd.enable && config.programs.hyprland.enable) {
-    settings = {
-      initial_session.command = lib.mkForce "${hyprRun}";
-      default_session.command =
-        lib.mkForce "${pkgs.tuigreet}/bin/tuigreet --time --remember --cmd ${hyprRun}";
-    };
-  };
-
-  home-manager.users.may.home.stateVersion = "26.05";
+  home-manager.users.may.home.stateVersion = "26.11";
 }

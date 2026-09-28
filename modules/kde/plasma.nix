@@ -47,6 +47,15 @@
       repeatRate = 25;
     };
 
+    input.touchpads = [
+      {
+        name = "SynPS/2 Synaptics TouchPad";
+        vendorId = "0002";
+        productId = "0007";
+        naturalScroll = true;
+      }
+    ];
+
     krunner.shortcuts.launch = [
       "Meta"
       "Alt+Space"
@@ -258,6 +267,7 @@
 
         Plugins = {
           desktopchangeosdEnabled = true;
+          "follow-moved-window-to-desktopEnabled" = true;
           krohnkiteEnabled = true;
         };
         TabBox.HighlightWindows = true;
@@ -289,14 +299,12 @@
         TerminalService = "kitty.desktop";
       };
 
-      kcminputrc.Touchpad.NaturalScroll = true;
-
       "plasma-localerc" = {
         Formats = {
           LANG = "en_CA.UTF-8";
           LC_MEASUREMENT = "en_CA.UTF-8";
         };
-        Translations.LANGUAGE = "en_GB";
+        Translations.LANGUAGE = "en_GB.UTF-8";
       };
     };
   };
